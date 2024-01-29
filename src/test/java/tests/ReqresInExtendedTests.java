@@ -1,11 +1,13 @@
 package tests;
 
 import models.LoginBodyModel;
+import models.LoginResponseModel;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.get;
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
 
 import static io.restassured.RestAssured.given;
@@ -18,6 +20,7 @@ public class ReqresInExtendedTests {
     @Test
     void LoginWithBadPracticeTest() {
         String data = "{ \"email\": \"eve.holt@reqres.in\", \"password\": \"cityslicka\" }";
+
 
         given()
                 .log().uri()
@@ -40,7 +43,7 @@ public class ReqresInExtendedTests {
         data.setEmail("eve.holt@reqres.in");
         data.setPassword("cityslicka");
 
-        given()
+        LoginResponseModel response = given()
                 .log().uri()
                 .contentType(JSON)
                 .body(data)
@@ -50,7 +53,9 @@ public class ReqresInExtendedTests {
                 .log().status()
                 .log().body()
                 .statusCode(200)
-                .body("token", is("QpwL5tke4Pnpja7X4"));
+                .extract().as(LoginResponseModel.class);
+
+        assertThat(response.getToken()).isEqualTo("QpwL5tke4Pnpja7X4");
     }
 
 }

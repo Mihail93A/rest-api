@@ -23,6 +23,4 @@ public class LoginBodyModel {
         this.password = password;
     }
 
-
-
 }
