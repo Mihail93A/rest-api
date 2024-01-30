@@ -134,4 +134,28 @@ public class ReqresInExtendedTests {
 
         assertThat(response.getToken()).isEqualTo("QpwL5tke4Pnpja7X4");
     }
+
+    @Test
+    void LoginWithCustomSpecsTest() {
+        LoginBodyLombokModel data = new LoginBodyLombokModel();
+        data.setEmail("eve.holt@reqres.in");
+        data.setPassword("cityslicka");
+
+        LoginResponseLombokModel response = given()
+                .log().uri()
+                .log().headers()
+                .log().body()
+                .filter(withCustomTemplates())
+                .contentType(JSON)
+                .body(data)
+                .when()
+                .post("https://reqres.in/api/login")
+                .then()
+                .log().status()
+                .log().body()
+                .statusCode(200)
+                .extract().as(LoginResponseLombokModel.class);
+
+        assertThat(response.getToken()).isEqualTo("QpwL5tke4Pnpja7X4");
+    }
 }
