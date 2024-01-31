@@ -18,6 +18,8 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.hasKey;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static specs.LoginSpecs.LoginRequestSpec;
+import static specs.LoginSpecs.loginResponseSpec;
 
 public class ReqresInExtendedTests {
 
@@ -141,19 +143,12 @@ public class ReqresInExtendedTests {
         data.setEmail("eve.holt@reqres.in");
         data.setPassword("cityslicka");
 
-        LoginResponseLombokModel response = given()
-                .log().uri()
-                .log().headers()
-                .log().body()
-                .filter(withCustomTemplates())
-                .contentType(JSON)
+        LoginResponseLombokModel response = given(LoginRequestSpec)
                 .body(data)
                 .when()
-                .post("https://reqres.in/api/login")
+                .post("/login")
                 .then()
-                .log().status()
-                .log().body()
-                .statusCode(200)
+                .spec(loginResponseSpec)
                 .extract().as(LoginResponseLombokModel.class);
 
         assertThat(response.getToken()).isEqualTo("QpwL5tke4Pnpja7X4");
